@@ -31,7 +31,7 @@ def run_smoke_test() -> bool:
         "Content-Type": "application/json",
     }
     payload = {
-        "model": "sarvam-30b",
+        "model": "sarvam-105b",
         "messages": [{"role": "user", "content": "ping"}],
         "max_tokens": 5,
     }

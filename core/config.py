@@ -4,8 +4,8 @@ Reads configuration from environment variables, .env file, or Streamlit secrets.
 """
 
 from pathlib import Path
-from typing import List, Optional
-from pydantic import Field
+from typing import Any, List, Optional, Union
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -19,7 +19,7 @@ class AppSettings(BaseSettings):
     # Models
     stt_model: str = Field(default="saaras:v3", alias="SARVAM_STT_MODEL")
     tts_model: str = Field(default="bulbul:v3", alias="SARVAM_TTS_MODEL")
-    llm_model: str = Field(default="sarvam-30b", alias="SARVAM_LLM_MODEL")
+    llm_model: str = Field(default="sarvam-105b", alias="SARVAM_LLM_MODEL")
     translate_model: str = Field(default="mayura:v1", alias="SARVAM_TRANSLATE_MODEL")
 
     # Application parameters
@@ -27,7 +27,25 @@ class AppSettings(BaseSettings):
     app_log_level: str = Field(default="INFO", alias="APP_LOG_LEVEL")
     max_file_size_mb: int = Field(default=10, alias="MAX_FILE_SIZE_MB")
     max_audio_duration_sec: int = Field(default=30, alias="MAX_AUDIO_DURATION_SEC")
-    allowed_extensions: List[str] = Field(default=["pdf", "docx"], alias="ALLOWED_EXTENSIONS")
+    allowed_extensions: Union[List[str], str] = Field(default=["pdf", "docx"], alias="ALLOWED_EXTENSIONS")
+
+    @field_validator("allowed_extensions", mode="before")
+    @classmethod
+    def parse_allowed_extensions(cls, v: Any) -> List[str]:
+        if isinstance(v, list):
+            return [str(x).strip().lower() for x in v]
+        if isinstance(v, str):
+            v_clean = v.strip()
+            if v_clean.startswith("[") and v_clean.endswith("]"):
+                try:
+                    import json
+                    parsed = json.loads(v_clean)
+                    if isinstance(parsed, list):
+                        return [str(x).strip().lower() for x in parsed]
+                except Exception:
+                    pass
+            return [ext.strip().lower() for ext in v_clean.split(",") if ext.strip()]
+        return ["pdf", "docx"]
 
     # Default languages
     default_spoken_language: str = Field(default="hi-IN", alias="DEFAULT_SPOKEN_LANGUAGE")
