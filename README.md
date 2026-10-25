@@ -119,6 +119,44 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
+## 🚢 Deployment Guide
+
+### Option 1: Streamlit Community Cloud (Recommended & Zero Cost)
+
+Deploy in under 3 minutes directly from GitHub:
+1. Push your repository to GitHub:
+   ```bash
+   git push -u origin main
+   ```
+2. Navigate to [share.streamlit.io](https://share.streamlit.io/) and log in with your GitHub account.
+3. Click **"New app"** and select:
+   - **Repository:** `Cuda-destroyer/Sarvam-AI-multilingual-Form-Assistant`
+   - **Branch:** `main`
+   - **Main file path:** `app/main.py`
+4. Expand **"Advanced settings..."** -> **"Secrets"** and enter:
+   ```toml
+   SARVAM_API_KEY = "your_actual_sarvam_api_key"
+   ```
+5. Click **"Deploy!"** Your application will be live at `https://<your-app-name>.streamlit.app`.
+
+### Option 2: Docker Container (Render, Hugging Face Spaces, AWS, GCP, Railway)
+
+1. **Build the container image:**
+   ```bash
+   docker build -t sarvam-form-assistant:latest .
+   ```
+2. **Run locally or in production:**
+   ```bash
+   docker run -d \
+     -p 8501:8501 \
+     -e SARVAM_API_KEY="your_actual_sarvam_api_key" \
+     --name sarvam-assistant \
+     sarvam-form-assistant:latest
+   ```
+3. Visit `http://localhost:8501` or your cloud container's assigned URL.
+
+---
+
 ## 🧪 Running Automated Tests
 
 Run the full automated test suite:

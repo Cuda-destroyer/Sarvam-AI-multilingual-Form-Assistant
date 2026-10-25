@@ -1,0 +1,17 @@
+.git
+.gitignore
+.env
+.env.*
+.streamlit/secrets.toml
+__pycache__
+*.py[cod]
+.pytest_cache
+storage/
+temp/
+uploads/
+outputs/
+*.log
+.coverage
+htmlcov/
+.DS_Store
+Thumbs.db
