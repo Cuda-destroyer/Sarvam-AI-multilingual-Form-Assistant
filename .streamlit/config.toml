@@ -2,6 +2,7 @@
 maxUploadSize = 10
 enableXsrfProtection = true
 headless = true
+enableWebsocketCompression = false
 
 [browser]
 gatherUsageStats = false
