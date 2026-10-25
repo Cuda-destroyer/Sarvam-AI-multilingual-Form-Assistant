@@ -5,6 +5,7 @@ Deterministic validators always have final authority over LLM outputs.
 """
 
 import json
+import re
 from typing import Any, Dict, List, Optional
 from core.config import get_config
 from core.models import FieldSpec, FieldType
@@ -98,12 +99,12 @@ class LLMService:
         if language_code == "en-IN":
             return f"Please provide your {spec.label}."
 
-        # Check if already translated to native script
+        # Check if already translated to pure native script
         cached = spec.explanation.get(language_code)
         if cached:
-            # Verify cached explanation is actually in native Indic script (not English fallback)
             has_indic = any("\u0900" <= ch <= "\u0D7F" for ch in cached)
-            if has_indic:
+            has_english_words = bool(re.search(r"[a-zA-Z]{3,}", cached))
+            if has_indic and not has_english_words:
                 return cached
 
         # Check semantic field ID & label for natural native phrasing
