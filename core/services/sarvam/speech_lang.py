@@ -25,7 +25,7 @@ class SpeechLanguageService:
         self,
         text: str,
         target_language_code: str = "hi-IN",
-        speaker: str = "meera",
+        speaker: str = "priya",
     ) -> Optional[bytes]:
         """
         Synthesize speech audio for question prompts using Bulbul v3.
