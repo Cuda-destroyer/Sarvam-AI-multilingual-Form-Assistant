@@ -3,6 +3,7 @@ Sarvam AI-Powered Multilingual Form & Document Assistant.
 Main Streamlit application entry point and screen router.
 """
 
+import base64
 from pathlib import Path
 import sys
 import uuid
@@ -303,17 +304,32 @@ def screen_interview(session: SessionStateModel):
     )
 
     # Optional TTS Audio Playback
-    if st.button("🔊 Play Question Audio (Bulbul v3)", key="btn_play_tts"):
-        with st.spinner("Generating audio..."):
+    tts_key = f"tts_audio_{current_field.id}_{lang}"
+    if st.button("🔊 Play Question Audio (Bulbul v3)", key=f"btn_play_tts_{current_field.id}"):
+        with st.spinner("Generating audio with Sarvam Bulbul v3..."):
             audio_bytes = speech_lang_svc.text_to_speech(
                 prompt_text,
                 target_language_code=lang,
                 speaker="priya",
             )
             if audio_bytes:
-                st.audio(audio_bytes, format="audio/wav")
+                st.session_state[tts_key] = base64.b64encode(audio_bytes).decode("utf-8")
             else:
                 st.info("Audio generation not available in offline demo mode.")
+
+    if tts_key in st.session_state and st.session_state[tts_key]:
+        b64_audio = st.session_state[tts_key]
+        st.markdown(
+            f"""
+            <div style="margin: 0.6rem 0 0.8rem 0;">
+                <audio controls autoplay style="width: 100%; border-radius: 6px;">
+                    <source src="data:audio/wav;base64,{b64_audio}" type="audio/wav">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     st.write("---")
 
