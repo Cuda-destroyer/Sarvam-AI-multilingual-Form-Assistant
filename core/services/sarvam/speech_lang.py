@@ -94,16 +94,27 @@ class SpeechLanguageService:
         """
         Translate descriptive answers into English using Mayura v1.
         """
+        return self.translate_text(text, source_language_code=source_language_code, target_language_code="en-IN")
+
+    def translate_text(
+        self,
+        text: str,
+        source_language_code: str = "en-IN",
+        target_language_code: str = "hi-IN",
+    ) -> str:
+        """
+        Translate text from source_language_code to target_language_code using Mayura v1.
+        """
         if not text or not text.strip():
             return ""
 
-        if source_language_code == "en-IN":
+        if source_language_code == target_language_code:
             return text.strip()
 
         payload = {
             "input": text.strip(),
             "source_language_code": source_language_code,
-            "target_language_code": "en-IN",
+            "target_language_code": target_language_code,
             "model": self.config.translate_model,
         }
 
@@ -113,6 +124,6 @@ class SpeechLanguageService:
             if translated:
                 return translated
         except Exception as e:
-            logger.warning("Translation failed (%s). Retaining original text.", str(e))
+            logger.warning("Translation to %s failed (%s). Retaining original text.", target_language_code, str(e))
 
         return text.strip()
