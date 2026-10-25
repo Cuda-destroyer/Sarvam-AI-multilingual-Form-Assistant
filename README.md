@@ -181,3 +181,4 @@ All 25 automated tests verify:
 - **Strict Gitignore:** Guards `.env`, `.streamlit/secrets.toml`, uploads, outputs, and caches.
 - **Untrusted Document Boundary:** Document content is placed strictly within tagged data delimiters and never executed as prompt instructions.
 - **Ephemeral Session Data:** Uploads and generated documents are stored only for the duration of the form session and shredded upon completion.
+
