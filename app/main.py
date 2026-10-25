@@ -305,7 +305,11 @@ def screen_interview(session: SessionStateModel):
     # Optional TTS Audio Playback
     if st.button("🔊 Play Question Audio (Bulbul v3)", key="btn_play_tts"):
         with st.spinner("Generating audio..."):
-            audio_bytes = speech_lang_svc.text_to_speech(prompt_text, target_language_code=lang)
+            audio_bytes = speech_lang_svc.text_to_speech(
+                prompt_text,
+                target_language_code=lang,
+                speaker="priya",
+            )
             if audio_bytes:
                 st.audio(audio_bytes, format="audio/wav")
             else:
